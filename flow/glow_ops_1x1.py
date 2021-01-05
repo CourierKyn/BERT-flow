@@ -8,7 +8,7 @@ modifications are as follows:
   3. remove support for conditional distributions
 """
 import tensorflow as tf
-from tensorflow.contrib.framework.python.ops import add_arg_scope, arg_scope
+from tf_slim import add_arg_scope, arg_scope
 # import tensorflow_probability as tfp
 
 import functools
@@ -546,7 +546,7 @@ def single_conv_dist(name, x, output_channels=None):
                           conv_init="zeros", apply_actnorm=False)
     mean = mean_log_scale[:, :, :, 0::2]
     log_scale = mean_log_scale[:, :, :, 1::2]
-    return tf.distributions.Normal(mean, tf.exp(log_scale))
+    return tf.compat.v1.distributions.Normal(mean, tf.exp(log_scale))
 
 
 # # ===============================================
@@ -653,7 +653,7 @@ def compute_prior(name, z, latent, hparams, condition=False, state=None,
   with tf.compat.v1.variable_scope(name, reuse=tf.compat.v1.AUTO_REUSE):
     z_shape = get_shape_list(z)
     h = tf.zeros(z_shape, dtype=tf.float32)
-    prior_dist = tf.distributions.Normal(h, tf.exp(h))
+    prior_dist = tf.compat.v1.distributions.Normal(h, tf.exp(h))
     return prior_dist, state
 
 
@@ -899,5 +899,5 @@ def top_prior(name, z_shape, learn_prior="normal", temperature=1.0):
   """
   with tf.compat.v1.variable_scope(name, reuse=tf.compat.v1.AUTO_REUSE):
     h = tf.zeros(z_shape, dtype=tf.float32)
-    prior_dist = tf.distributions.Normal(h, tf.exp(h))
+    prior_dist = tf.compat.v1.distributions.Normal(h, tf.exp(h))
     return prior_dist

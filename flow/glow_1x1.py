@@ -1,5 +1,6 @@
 import tensorflow as tf
-from tensorflow.contrib.framework.python.ops import add_arg_scope, arg_scope
+import tf_slim as slim
+from tf_slim import add_arg_scope, arg_scope
 import flow.glow_ops_1x1 as glow_ops
 from flow.glow_ops_1x1 import get_shape_list
 import flow.glow_init_hook
@@ -8,8 +9,8 @@ import flow.glow_init_hook
 import numpy as np
 import os, sys
 
-arg_scope = tf.contrib.framework.arg_scope
-add_arg_scope = tf.contrib.framework.add_arg_scope
+arg_scope = slim.arg_scope
+add_arg_scope = slim.add_arg_scope
 
 class AttrDict(dict):
   def __init__(self, *args, **kwargs):
@@ -43,7 +44,7 @@ class Glow():
     if is_training:
       init_features = features
       init_op = self.objective_tower(init_features, init=True)
-      init_op = tf.Print(
+      init_op = tf.compat.v1.Print(
           init_op, [init_op], message="Triggering data-dependent init.",
           first_n=20)
       tf.compat.v1.add_to_collection("glow_init_op", init_op)
